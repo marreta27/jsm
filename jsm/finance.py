@@ -31,7 +31,7 @@ class FinanceData(object):
         self.bps = self._float(bps) # 1株純資産
         self.price_min = self._int(price_min) # 最低購入代金
         self.round_lot = self._int(round_lot, 1) # 単元株数
-        self.yearshigh = self._int(years_high) # 年初来高値
+        self.years_high = self._int(years_high) # 年初来高値
         self.years_low = self._int(years_low) # 年初来安値
     
     def _parse(self, val, default=0):
@@ -52,7 +52,7 @@ class FinanceData(object):
                 'price_min:%s round_lot:%s years_high:%s years_low:%s>' % (
                 self.market_cap, self.shares_issued, self.dividend_yield, self.dividend_one,
                 self.per, self.pbr, self.eps, self.bps,
-                self.price_min, self.round_lot, self.yearshigh, self.years_low
+                self.price_min, self.round_lot, self.years_high, self.years_low
                 )
 
 class FinanceParser(object):

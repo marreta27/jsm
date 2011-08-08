@@ -152,34 +152,34 @@ class QuoteMonthly(Quote):
 class QuoteCsv(object):
     """株データをCSVファイルに
     """
-    def __init__(self, path, kabu):
+    def __init__(self, path, klass):
         self._path = path
-        self._kabu = kabu
+        self._klass = klass
     
     def save(self, code, page=0):
         """指定ページから一覧をCSV形式で保存"""
         c = csv.writer(open(self._path, 'w'))
-        for one in self._kabu.get(code, page):
+        for one in self._klass.get(code, page):
             c.writerow(self._csv(one))
     
     def save_latest_one(self, code):
         """最新の1件をCSV形式で保存"""
         c = csv.writer(open(self._path, 'w'))
-        one = self._kabu.get_latest_one(code)
+        one = self._klass.get_latest_one(code)
         if one:
             c.writerow(self._csv(one))
     
     def save_one(self, date, code):
         """指定日時の中から1件をCSV形式で保存"""
         c = csv.writer(open(self._path, 'w'))
-        one = self._kabu.get_one(date, code)
+        one = self._klass.get_one(date, code)
         if one:
             c.writerow(self._csv(one))
     
     def save_all(self, code):
         """全部CSV形式で保存"""
         c = csv.writer(open(self._path, 'w'))
-        for one in self._kabu.get_all(code):
+        for one in self._klass.get_all(code):
             c.writerow(self._csv(one))
     
     def _csv(self, one):

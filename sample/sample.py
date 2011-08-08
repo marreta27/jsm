@@ -2,6 +2,7 @@
 from jsm.quote import QuoteDaily, QuoteWeekly, QuoteMonthly, QuoteCsv
 from jsm.quotetoday import QuoteToday
 from jsm.finance import Finance
+from jsm.brand import Brand
 
 if __name__ == "__main__":
     import tempfile
@@ -16,3 +17,8 @@ if __name__ == "__main__":
     
     f = Finance()
     print f.get(9984)
+    
+    b = Brand()
+    print b.get_0050()
+    print b.get_all()
+    
