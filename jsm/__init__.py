@@ -114,7 +114,7 @@ class Quotes(object):
         b = Brand()
         if not brand_id:
             return b.get_all()
-        return getattr(b, brand_id)()
+        return getattr(b, 'get_%s' % brand_id)()
         
 class QuotesCsv(object):
     """株式情報取得してCSVに保存"""
@@ -144,4 +144,5 @@ class QuotesCsv(object):
         return [price.date.strftime('%Y-%m-%d'),
                 price.open, price.high, price.low, 
                 price.close, price.volume]
-    
+
+
