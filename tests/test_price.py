@@ -19,7 +19,7 @@ from tests import CCODE
 
 def test_get():
     q = jsm.Quotes()
-    d = q.get_finance(CCODE)
+    d = q.get_price(CCODE)
     if not d:
         raise Exception('is None')
     

@@ -5,106 +5,125 @@ Overview
 
 各種データは、 `Yahoo!ファイナンス <http://finance.yahoo.co.jp/>`_ からスクレイピングしています。
 
-動作は、Python2.6 - 2.7 で確認しています。
+動作は、Python2.5 - 2.7 で確認しています。
 
 Installation
 ============
 
-以下のように、pypiからのインストールをおすすめします。::
+PyPIからのインストールが簡単です::
 
   easy_install jsm
 
 Usage
 =====
 
-note: 株価データを取得した際の戻り値は、QuoteDataクラスのインスタンス。
+jsm.Quotesのインスタンスを作成::
 
-当日株価の取得::
+  import jsm
+  q = jsm.Quotes()
 
-  from jsm.quotetoday import QuoteToday
-  q = QuoteToday()
-  q.get(9984) # 証券コードを指定して取得。この例ではソフトバンクの株価を取得
+以後、作成したインスタンスを使って各種データを取得します。
 
-デイリー株価の取得::
+当日の株価の取得（例ではYahoo!の証券コードを指定）::
+  
+  q.get_price(4689) 
 
-  from jsm.quote import QuoteDaily
-  q = QuoteDaily()
-  q.get_latest_one(9984) # 最新のデイリー株価を取得
-  q.get(9984, 2) # 指定ページの株価一覧を取得
-  q.get_all(9984) # 全データを取得。重いうえに負荷をかけるので注意してください。
+過去の株価の取得::
+  
+  q.get_historical_prices(4689)
 
-ウィークリー株価の取得::
+デフォルトでは当日から過去1ヶ月のデイリー株価を取得します。
 
-  from jsm.quote import QuoteWeekly
-  q = QuoteWeekly()
-  # デイリー株価の取得APIと同じ
+週間, 月間の株価の取得::
 
-マンスリー株価の取得::
+  q.get_historical_prices(4689, jsm.WEEKLY) # 週間株価を取得
+  q.get_historical_prices(4689, jsm.MONTHLY) # 月間株価を取得
 
-  from jsm.quote import QuoteMonthly
-  q = QuoteMonthly()
-  # デイリー株価の取得APIと同じ
+指定した期間の株価の取得::
+  
+  import datetime
+  start_date = datetime.date(2011, 1, 1)
+  end_date = datetime.date(2011, 2, 1)
+  q.get_historical_prices(4689, jsm.DAILY, start_date, end_date) # 2011/1/1 〜 2011/2/1までの株価を取得
 
-株価データをCSVファイルに保存::
+2000/1/1〜現在までの株価の取得::
 
-  from jsm.quote import QuoteCsv, QuoteToday
-  import tempfile
-  q = QuoteCsv(tempfile.mktemp(dir='/tmp/'), QuoteToday()) # 第1引数に保存する場所, 第2引数に取得する株価のクラス
-  q.save(9984, 2) # CSV形式で保存
+  q.get_historical_prices(4689, jsm.DAILY, all=True) # 負荷をかけるので要注意
 
-note: 財務データを取得した際の戻り値は、FinanceDataクラスのインスタンス。
+株価取得メソッド（get_price, get_historical_prices）の戻り値は、PriceDataクラスのインスタンスです。
 
-財務データの取得::
+PriceDataについては、下記Data項を参照してください。
 
-  from jsm.finance import Finance
-  f = Finance()
-  f.get(9984)
+jsmには、取得した株価をCSV形式で保存する為の便利なクラスが用意されています。
 
-note: 銘柄データを取得した際の戻り値は、BrandDataクラスのインスタンス。
+株価をCSV形式で保存::
 
-銘柄データの取得::
+  c = jsm.QuotesCsv()
+  c.save_price(4689)
+  c.save_historical_prices(4689) # get_historical_pricesと同じ使い方
 
-  from jsm.brand import Brand
-  b = Brand()
-  b.get_0050() # 農林・水産業
-  b.get_1050() # 鉱業
-  b.get_2050() # 建設業
-  b.get_3050() # 食料品
-  b.get_3100() # 繊維製品
-  b.get_3150() # パルプ・紙
-  b.get_3200() # 化学
-  b.get_3250() # 医薬品
-  b.get_3300() # 石油・石炭製品
-  b.get_3350() # ゴム製品
-  b.get_3400() # ガラス・土石製品
-  b.get_3450() # 鉄鋼
-  b.get_3500() # 非鉄金属
-  b.get_3550() # 金属製品
-  b.get_3600() # 機械
-  b.get_3650() # 電気機器
-  b.get_3700() # 輸送機器
-  b.get_3750() # 精密機器
-  b.get_3800() # その他製品
-  b.get_4050() # 電気・ガス業
-  b.get_5050() # 陸運業
-  b.get_5100() # 海運業
-  b.get_5150() # 空運業
-  b.get_5200() # 倉庫・運輸関連業
-  b.get_5250() # 情報・通信
-  b.get_6050() # 卸売業
-  b.get_6100() # 小売業
-  b.get_7050() # 銀行業
-  b.get_7100() # 証券業
-  b.get_7150() # 保険業
-  b.get_7200() # その他金融業
-  b.get_8050() # 不動産業
-  b.get_9050() # サービス業
-  b.get_all() # 全業種
+対象の財務情報を得る為には、以下のメソッドを利用します。
+
+財務情報の取得::
+  
+  q.get_finance(4689)
+
+財務情報取得メソッド（get_finance）の戻り値は、FinanceDataクラスのインスタンスです。
+
+FinanceDataについては、下記Data項を参照してください。
+
+またjsmでは、業種別の銘柄情報を得ることができます。
+
+業種別の銘柄情報を得る為には、以下のメソッドを利用します。
+
+業種別の銘柄情報の取得::
+  
+  q.get_brand() # デフォルト：全業種
+  
+また以下のIDを引数に渡すことで、それぞれ業種別の銘柄情報を得ることができます::
+
+  '0050' # 農林・水産業
+  '1050' # 鉱業
+  '2050' # 建設業
+  '3050' # 食料品
+  '3100' # 繊維製品
+  '3150' # パルプ・紙
+  '3200' # 化学
+  '3250' # 医薬品
+  '3300' # 石油・石炭製品
+  '3350' # ゴム製品
+  '3400' # ガラス・土石製品
+  '3450' # 鉄鋼
+  '3500' # 非鉄金属
+  '3550' # 金属製品
+  '3600' # 機械
+  '3650' # 電気機器
+  '3700' # 輸送機器
+  '3750' # 精密機器
+  '3800' # その他製品
+  '4050' # 電気・ガス業
+  '5050' # 陸運業
+  '5100' # 海運業
+  '5150' # 空運業
+  '5200' # 倉庫・運輸関連業
+  '5250' # 情報・通信
+  '6050' # 卸売業
+  '6100' # 小売業
+  '7050' # 銀行業
+  '7100' # 証券業
+  '7150' # 保険業
+  '7200' # その他金融業
+  '8050' # 不動産業
+  '9050' # サービス業
+
+銘柄情報取得メソッド（get_brand）の戻り値は、BrandDataクラスのインスタンスです。
+
+BrandDataについては、下記Data項を参照してください。
 
 Data
 ====
 
-QuoteData::
+PriceData::
 
   date      # 日時
   open      # 初値
@@ -112,7 +131,6 @@ QuoteData::
   low       # 安値
   close     # 終値
   volume    # 出来高
-  adj_close # 調整後終値（株式分割後など）
 
 FinanceData::
 
@@ -139,7 +157,13 @@ BrandData::
 Changelog
 =========
 
+0.2 (2011-08-20)
+----------------
+
+- Fixed bug
+- Improved API
+
 0.1 (2011-08-08)
 ----------------
 
-- first release
+- First release

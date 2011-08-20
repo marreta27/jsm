@@ -19,6 +19,21 @@ import re
 from jsm.util import html_parser, debuglog
 
 class FinanceData(object):
+    """財務データ
+    market_cap: 時価総額
+    shares_issued: 発行済み株式数
+    dividend_yield: 配当利回り
+    dividend_one: 1株配当
+    per: 株価収益率
+    pbr: 純資産倍率
+    eps: 1株利益
+    bps: 1株純資産
+    price_min: 最低購入代金
+    round_lot: 単元株数
+    years_high: 年初来高値
+    years_low: 年初来安値
+    """
+    
     def __init__(self, market_cap, shares_issued, dividend_yield, dividend_one, 
                          per, pbr, eps, bps, price_min, round_lot, years_high, years_low):
         self.market_cap = self._int(market_cap) # 時価総額
@@ -58,17 +73,17 @@ class FinanceData(object):
 class FinanceParser(object):
     """財務データの情報を解析
     """
-    SITE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=%(code)s"
+    SITE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=%(ccode)s"
     DATA_FIELD_NUM = 12 # データの要素数
     
     def __init__(self):
         self._elm = None
     
-    def fetch(self, code):
+    def fetch(self, ccode):
         """財務データを取得
-        code: 証券コード
+        ccode: 証券コード
         """
-        siteurl = self.SITE_URL % {'code':code}
+        siteurl = self.SITE_URL % {'ccode':ccode}
         fp = urllib2.urlopen(siteurl)
         html = fp.read()
         fp.close()
@@ -101,13 +116,13 @@ class FinanceParser(object):
 class Finance(object):
     """財務データを取得
     """
-    def get(self, code):
+    def get(self, ccode):
         """指定の証券コードから取得"""
         p = FinanceParser()
-        p.fetch(code)
+        p.fetch(ccode)
         return p.get()
 
 if __name__ == "__main__":
     f = Finance()
-    print f.get(9984)
-    print f.get(2121)
+    print(f.get(4689))
+    print(f.get(2121))

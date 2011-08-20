@@ -14,12 +14,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #---------------------------------------------------------------------------
-import jsm
-from tests import CCODE
-
-def test_get():
-    q = jsm.Quotes()
-    d = q.get_finance(CCODE)
-    if not d:
-        raise Exception('is None')
-    

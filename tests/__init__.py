@@ -16,5 +16,4 @@
 #---------------------------------------------------------------------------
 import datetime
 
-SCODE = 9984 # Softbank
-DATE = datetime.datetime(2010, 4, 1)
+CCODE = 4689 # Yahoo!

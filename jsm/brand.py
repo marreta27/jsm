@@ -19,6 +19,12 @@ import time
 from jsm.util import html_parser, debuglog
 
 class BrandData(object):
+    """銘柄情報
+    ccode: 証券コード
+    market: 市場
+    name: 銘柄名
+    info: 銘柄情報
+    """
     def __init__(self, ccode, market, name, info):
         self.ccode = ccode # 証券コード
         self.market = market # 市場
@@ -298,7 +304,7 @@ if __name__ == "__main__":
     from jsm.util import use_debug
     use_debug()
     b = Brand()
-    print b.get_0050()
+    print(b.get_0050())
     
     # test
 #    markets = {}

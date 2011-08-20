@@ -1,24 +1,24 @@
 # coding=utf-8
-from jsm.quote import QuoteDaily, QuoteWeekly, QuoteMonthly, QuoteCsv
-from jsm.quotetoday import QuoteToday
+from jsm.historicalprices import HistoricalDailyPrices, HistoricalWeeklyPrices, HistoricalMonthlyPrices, HistoricalPricesToCsv
+from jsm.price import Price
 from jsm.finance import Finance
 from jsm.brand import Brand
 
 if __name__ == "__main__":
     import tempfile
-    for q in (QuoteDaily(), QuoteWeekly(), QuoteMonthly()):
-        print q.get_latest_one(9984)
-        print q.get(9984, 2)
-        c = QuoteCsv(tempfile.mktemp(dir='/tmp/'), q)
-        c.save(9984, 2)
+    for p in (HistoricalDailyPrices(), HistoricalWeeklyPrices(), HistoricalMonthlyPrices()):
+        print(p.get_latest_one(4689))
+        print(p.get(4689, 2))
+        c = HistoricalPricesToCsv(tempfile.mktemp(dir='/tmp/'), p)
+        c.save(4689, 2)
     
-    q = QuoteToday()
-    print q.get(9984)
+    p = Price()
+    print(p.get(4689))
     
     f = Finance()
-    print f.get(9984)
+    print(f.get(4689))
     
     b = Brand()
-    print b.get_0050()
-    print b.get_all()
+    print(b.get_0050())
+    print(b.get_all())
     

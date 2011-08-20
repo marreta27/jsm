@@ -17,9 +17,9 @@
 import urllib2
 import datetime
 from jsm.util import html_parser, debuglog
-from jsm.quotebase import QuoteData
+from jsm.pricebase import PriceData
 
-class QuoteTodayParser(object):
+class PriceParser(object):
     """今日の値動きデータの情報を解析
     """
     SITE_URL = "http://quote.yahoo.co.jp/q?s=%(code)s&d=v2&esearch=1"
@@ -48,7 +48,7 @@ class QuoteTodayParser(object):
             if len(tds) == self.DATA_FIELD_NUM:
                 tds = tds[3:10] # 不要な要素を取り除く
                 data = [self._text(td) for td in tds]
-                data = QuoteData(datetime.datetime.today(), 
+                data = PriceData(datetime.datetime.today(), 
                                  data[4], data[5], data[6], data[0], data[3], data[0])
                 return data
         else:
@@ -63,16 +63,16 @@ class QuoteTodayParser(object):
             return font.text.encode("utf-8")
         return elm.text.encode("utf-8")
 
-class QuoteToday(object):
+class Price(object):
     """今日の値動きデータを取得
     """
     def get(self, code):
         """指定の証券コードから取得"""
-        p = QuoteTodayParser()
+        p = PriceParser()
         p.fetch(code)
         return p.get()
 
 if __name__ == "__main__":
-    q = QuoteToday()
-    print q.get(9984)
+    p = Price()
+    print(p.get(4689))
 
