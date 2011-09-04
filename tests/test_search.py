@@ -3,11 +3,9 @@
 # Copyright 2011 utahta
 #---------------------------------------------------------------------------
 import jsm
-from tests import CCODE
 
-def test_get():
+def test_parser():
     q = jsm.Quotes()
-    d = q.get_finance(CCODE)
-    if not d:
-        raise Exception('is None')
+    result = q.search('NTT')
+    assert result[0].ccode == '9437'
     

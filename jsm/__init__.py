@@ -1,18 +1,6 @@
 # coding=utf-8
 #---------------------------------------------------------------------------
 # Copyright 2011 utahta
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 #---------------------------------------------------------------------------
 import datetime
 import time
@@ -22,8 +10,9 @@ from jsm.historicalprices import HistoricalPrices, HistoricalDailyPrices,\
     HistoricalWeeklyPrices, HistoricalMonthlyPrices
 from jsm.finance import Finance
 from jsm.brand import Brand
+from jsm.search import Search
 
-VERSION = '0.2'
+VERSION = '0.3'
 
 # RangeType
 DAILY = 0
@@ -115,6 +104,11 @@ class Quotes(object):
         if not brand_id:
             return b.get_all()
         return getattr(b, 'get_%s' % brand_id)()
+    
+    def search(self, terms):
+        """銘柄検索"""
+        s = Search()
+        return s.get(terms)
         
 class QuotesCsv(object):
     """株式情報取得してCSVに保存"""
