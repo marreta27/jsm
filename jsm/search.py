@@ -7,6 +7,7 @@ import math
 import time
 from jsm.util import html_parser
 from jsm.brand import BrandData
+import re
 
 class SearchParser(object):
     """銘柄検索ページパーサ"""
@@ -16,6 +17,7 @@ class SearchParser(object):
 
     def __init__(self):
         self._elms = []
+        self._detail = False
         self._max_page = 0
     
     def fetch(self, terms, page=1):
@@ -28,12 +30,23 @@ class SearchParser(object):
         html = fp.read()
         fp.close()
         soup = html_parser(html)
-        # 全件数
+        
         elm = soup.find('div', {'class': 'ymuiPagingTop yjSt marB4 clearFix'})
-        self._max_page = int(math.ceil(int(self._text(elm)) / 50.0))
-        # データ
-        elm = soup.find("div", {'class': 'boardFinList fsize13px s130 marB10'})
-        self._elms = elm.findAll('tr')
+        if elm:
+            # 全件数
+            max_page = self._text(elm)
+            if max_page:
+                self._max_page = int(math.ceil(int(max_page) / 50.0))
+            # データ
+            elm = soup.find("div", {'class': 'boardFinList fsize13px s130 marB10'})
+            self._elms = elm.findAll('tr')
+            self._detail = False
+        else:
+            elm = soup.find('div', {'class': 'selectFinTitle yjL'})
+            if elm:
+                self._elms = [elm]
+                self._max_page = 0
+                self._detail = True
         
     def fetch_all(self, terms, page=1):
         """検索結果を全部取得
@@ -49,16 +62,29 @@ class SearchParser(object):
         
     def get(self):
         result_set = []
-        for elm in self._elms:
-            tds = elm.findAll('td')
-            if tds:
-                market = self._market(tds[1])
-                if market:
-                    res = BrandData(self._text(tds[0]), 
-                                    market,
-                                    self._text(tds[2]),
-                                    '')
-                    result_set.append(res)
+        if self._detail:
+            elm = self._elms[0]
+            h1 = elm.find('h1')
+            if h1:
+                strong = h1.find('strong')
+                strong.find('span').extract()
+                m = re.search(u'【(\d+)】(.*)', strong.text)
+                if m:
+                    result_set.append(BrandData(m.group(1).encode('utf-8'),
+                                                '', 
+                                                m.group(2).encode('utf-8').strip(), 
+                                                ''))
+        else:
+            for elm in self._elms:
+                tds = elm.findAll('td')
+                if tds:
+                    market = self._market(tds[1])
+                    if market:
+                        res = BrandData(self._text(tds[0]), 
+                                        market,
+                                        self._text(tds[2]),
+                                        '')
+                        result_set.append(res)
         return result_set
     
     def _market(self, soup):
