@@ -12,7 +12,7 @@ from jsm.finance import Finance
 from jsm.brand import Brand
 from jsm.search import Search
 
-VERSION = '0.3'
+VERSION = '0.4'
 
 # RangeType
 DAILY = 0
