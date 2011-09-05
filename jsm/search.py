@@ -62,6 +62,8 @@ class SearchParser(object):
         
     def get(self):
         result_set = []
+        if not self._elms:
+            return result_set
         if self._detail:
             elm = self._elms[0]
             h1 = elm.find('h1')

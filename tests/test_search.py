@@ -12,4 +12,6 @@ def test_search():
     assert result[0].ccode == '3632'
     result = q.search('NTTドコモ')
     assert result[0].ccode == '9437'
+    result = q.search('0000')
+    assert len(result) == 0
     
