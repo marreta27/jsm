@@ -69,7 +69,9 @@ class SearchParser(object):
             h1 = elm.find('h1')
             if h1:
                 strong = h1.find('strong')
-                strong.find('span').extract()
+                span = strong.find('span')
+                if span:
+                    span.extract()
                 m = re.search(u'【(\d+)】(.*)', strong.text)
                 if m:
                     result_set.append(BrandData(m.group(1).encode('utf-8'),
