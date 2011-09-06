@@ -52,7 +52,7 @@ class Quotes(object):
         if not end_date:
             end_date = datetime.date.today()
         if not start_date:
-            start_date = datetime.date.fromtimestamp(time.mktime(end_date.timetuple()) - 259200)
+            start_date = datetime.date.fromtimestamp(time.mktime(end_date.timetuple()) - 2592000)
         end_date = datetime.date.today()
         return p.get_range(ccode, start_date, end_date)
     
