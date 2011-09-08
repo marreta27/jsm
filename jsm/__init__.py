@@ -11,8 +11,9 @@ from jsm.historicalprices import HistoricalPrices, HistoricalDailyPrices,\
 from jsm.finance import Finance
 from jsm.brand import Brand
 from jsm.search import Search
+from jsm.util import to_utf8, to_unicode
 
-VERSION = '0.4'
+VERSION = '0.5'
 
 # RangeType
 DAILY = 0
@@ -26,6 +27,7 @@ class Quotes(object):
         """現在の株価を取得
         ccode: 証券コード
         """
+        ccode = to_utf8(ccode)
         p = Price()
         return p.get(ccode)
     
@@ -37,6 +39,7 @@ class Quotes(object):
         end_date: 取得終了日時(default: 今日)
         all: Trueなら全データ取得
         """
+        ccode = to_utf8(ccode)
         if range_type == DAILY:
             p = HistoricalDailyPrices()
         elif range_type == WEEKLY:
@@ -59,6 +62,7 @@ class Quotes(object):
     def get_finance(self, ccode):
         """財務データを取得
         """
+        ccode = to_utf8(ccode)
         f = Finance()
         return f.get(ccode)
         
@@ -100,6 +104,7 @@ class Quotes(object):
                 '9050': サービス業
                 None: 全業種
         """
+        brand_id = to_utf8(brand_id)
         b = Brand()
         if not brand_id:
             return b.get_all()
@@ -107,6 +112,7 @@ class Quotes(object):
     
     def search(self, terms):
         """銘柄検索"""
+        terms = to_utf8(terms)
         s = Search()
         return s.get(terms)
         
@@ -114,6 +120,7 @@ class QuotesCsv(object):
     """株式情報取得してCSVに保存"""
     
     def save_price(self, path, ccode):
+        path = to_unicode(path)
         q = Quotes()
         price = q.get_price(ccode)
         c = csv.writer(open(path, 'w'))
@@ -127,6 +134,7 @@ class QuotesCsv(object):
         end_date: 取得終了日時(default: 今日)
         all: Trueなら全データ取得
         """
+        path = to_unicode(path)
         q = Quotes()
         prices = q.get_historical_prices(ccode, range_type, start_date, end_date, all)
         c = csv.writer(open(path, 'w'))

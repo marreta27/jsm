@@ -12,6 +12,12 @@ def test_save():
     c = jsm.QuotesCsv()
     c.save_price(tempfile.mktemp(dir='/tmp/'), CCODE)
 
+def test_save_ja_path():
+    c = jsm.QuotesCsv()
+    path = tempfile.mktemp(dir='/tmp/')
+    path += '日本語'
+    c.save_price(path, CCODE)
+
 def test_save_range():
     c = jsm.QuotesCsv()
     start_date = datetime.date.fromtimestamp(time.time() - 604800) # 1週間前

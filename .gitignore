@@ -13,3 +13,4 @@ parts
 .installed.cfg
 *.swp
 *egg-info
+build

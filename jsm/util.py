@@ -21,3 +21,12 @@ def use_debug():
 def debuglog(val):
     logging.debug(val)
     
+def to_utf8(val):
+    if type(val) is unicode:
+        return val.encode("utf-8")
+    return val
+
+def to_unicode(val):
+    if type(val) is str:
+        return val.decode('utf-8')
+    return val
