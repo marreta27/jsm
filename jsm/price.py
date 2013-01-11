@@ -7,49 +7,46 @@ import datetime
 from jsm.util import html_parser, debuglog
 from jsm.pricebase import PriceData
 
+
 class PriceParser(object):
     """今日の値動きデータの情報を解析
     """
-    SITE_URL = "http://quote.yahoo.co.jp/q?s=%(code)s&d=v2&esearch=1"
-    DATA_FIELD_NUM = 11 # データの要素数
-    
+    SITE_URL = "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=%(code)s"
+
     def __init__(self):
         self._elm = None
-    
+
     def fetch(self, code):
         """株価データを取得
         code: 証券コード
         """
-        siteurl = self.SITE_URL % {'code':code}
+        siteurl = self.SITE_URL % {'code': code}
         fp = urllib2.urlopen(siteurl)
         html = fp.read()
         fp.close()
-        html = html.decode("euc_jp", "ignore").encode("utf8") # UTF-8に変換
         soup = html_parser(html)
-        self._elm = soup.find("tr", attrs={"align": "right"})
+        self._elm = soup.findAll("dd", attrs={"class": "ymuiEditLink mar0"})
         debuglog(siteurl)
-    
+
     def get(self):
         if self._elm:
-            # 有効なデータは１つ
-            tds = self._elm.findAll("td")
-            if len(tds) == self.DATA_FIELD_NUM:
-                tds = tds[3:10] # 不要な要素を取り除く
-                data = [self._text(td) for td in tds]
-                data = PriceData(datetime.datetime.today(), 
-                                 data[4], data[5], data[6], data[0], data[3], data[0])
-                return data
+            data = [self._text(tr) for tr in self._elm]
+            return PriceData(
+                date=datetime.datetime.today(), close=data[0], open=data[1],
+                high=data[2], low=data[3], volume=data[4], adj_close=data[0])
         else:
             return None
-    
+
     def _text(self, elm):
-        b = elm.find("b")
-        if b:
-            return b.text.encode("utf-8")
-        font = elm.find('font')
-        if font:
-            return font.text.encode("utf-8")
-        return elm.text.encode("utf-8")
+        """strong及びfontタグを取り除く
+        """
+        text = elm.find('strong')
+        if not text:
+            font = elm.find('font')
+        if not text:
+            return elm.text
+        return text.text.replace(',', '')
+
 
 class Price(object):
     """今日の値動きデータを取得
@@ -63,4 +60,3 @@ class Price(object):
 if __name__ == "__main__":
     p = Price()
     print(p.get(4689))
-
