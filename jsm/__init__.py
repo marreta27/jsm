@@ -56,7 +56,6 @@ class Quotes(object):
             end_date = datetime.date.today()
         if not start_date:
             start_date = datetime.date.fromtimestamp(time.mktime(end_date.timetuple()) - 2592000)
-        end_date = datetime.date.today()
         return p.get_range(ccode, start_date, end_date)
     
     def get_finance(self, ccode):
