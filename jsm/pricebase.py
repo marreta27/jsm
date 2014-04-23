@@ -52,7 +52,9 @@ class PriceData(object):
         """
         if type(val) == int:
             return val
-        return int(val.replace(',', ''))
+        if type(val) == str:
+            return int(val.replace(',', ''))
+        return int(val.decode("utf8").replace(',', ''))
     
     def __repr__(self):
         """デバッグ文字列
