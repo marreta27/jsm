@@ -10,7 +10,7 @@ setup(name='jsm',
       description="Get the japanese stock market data",
       long_description=long_description,
       install_requires=[
-        'BeautifulSoup',
+        'beautifulsoup4',
         'html5lib',
       ],
       classifiers=[

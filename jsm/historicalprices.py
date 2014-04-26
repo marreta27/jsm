@@ -2,10 +2,16 @@
 #---------------------------------------------------------------------------
 # Copyright 2011 utahta
 #---------------------------------------------------------------------------
-import urllib2
+try:
+    # For Python3
+    from urllib.request import urlopen
+except ImportError:
+    # For Python2
+    from urllib2 import urlopen
 import datetime
 import time
 import csv
+import sys
 from jsm.util import html_parser, debuglog
 from jsm.pricebase import PriceData
 
@@ -29,10 +35,10 @@ class HistoricalPricesParser(object):
         siteurl = self.SITE_URL % {'syear': start_date.year, 'smon': start_date.month, 'sday': start_date.day,
                                    'eyear': end_date.year, 'emon': end_date.month, 'eday': end_date.day,
                                    'page': page*self.COLUMN_NUM, 'range_type':range_type, 'ccode':ccode}
-        fp = urllib2.urlopen(siteurl)
+        fp = urlopen(siteurl)
         html = fp.read()
         fp.close()
-        html = html.decode("euc_jp", "ignore").encode("utf8") # UTF-8に変換
+        html = html.decode("euc-jp", "ignore")
         soup = html_parser(html)
         # <tr align=right bgcolor="#ffffff">
         self._elms = soup.findAll("tr", attrs={"align": "right", "bgcolor": "#ffffff"})
@@ -56,15 +62,22 @@ class HistoricalPricesParser(object):
             return None
     
     def get_all(self):
-        return [self.get(i) for i in xrange(len(self._elms))]
+        return [self.get(i) for i in range(len(self._elms))]
         
     def _text(self, soup):
         small = soup.find("small")
         if small:
             b = small.find("b")
-            if b:
-                return b.text.encode("utf-8")
-            return small.text.encode("utf-8")
+            if sys.version_info.major < 3:
+                if b:
+                    return b.text.encode("utf-8")
+                else:
+                    return small.text.encode("utf-8")
+            else:
+                if b:
+                    return b.text
+                else:
+                    return small.text
         else:
             return ""
 
@@ -104,7 +117,7 @@ class HistoricalPrices(object):
         """指定日時間から取得"""
         p = HistoricalPricesParser()
         res = []
-        for page in xrange(500):
+        for page in range(500):
             p = HistoricalPricesParser()
             p.fetch(start_date, end_date, ccode, self._range_type, page)
             data = p.get_all()
@@ -119,7 +132,7 @@ class HistoricalPrices(object):
         start_date = datetime.date(2000, 1, 1)
         end_date = datetime.date.today()
         res = []
-        for page in xrange(500):
+        for page in range(500):
             p = HistoricalPricesParser()
             p.fetch(start_date, end_date, ccode, self._range_type, page)
             data = p.get_all()

@@ -2,7 +2,12 @@
 #---------------------------------------------------------------------------
 # Copyright 2011 utahta
 #---------------------------------------------------------------------------
-import urllib2
+try:
+    # For Python3
+    from urllib.request import urlopen
+except ImportError:
+    # For Python2
+    from urllib2 import urlopen
 import datetime
 from jsm.util import html_parser, debuglog
 from jsm.pricebase import PriceData
@@ -21,7 +26,7 @@ class PriceParser(object):
         code: 証券コード
         """
         siteurl = self.SITE_URL % {'code': code}
-        fp = urllib2.urlopen(siteurl)
+        fp = urlopen(siteurl)
         html = fp.read()
         fp.close()
         soup = html_parser(html)
