@@ -112,6 +112,8 @@ class Search(object):
     """銘柄検索
     """
     def get(self, terms):
-        p = SearchParser()
-        p.fetch_all(terms)
-        return p.get()
+        # まともに動いていないみたいなので一旦無効化
+        return []
+        #p = SearchParser()
+        #p.fetch_all(terms)
+        #return p.get()
