@@ -146,21 +146,21 @@ class HistoricalDailyPrices(HistoricalPrices):
     """デイリーの株価データを取得
     """
     def __init__(self):
-        super(HistoricalPrices, self).__init__()
+        super(HistoricalDailyPrices, self).__init__()
         self._range_type = self.DAILY
 
 class HistoricalWeeklyPrices(HistoricalPrices):
     """週間の株価データを取得
     """
     def __init__(self):
-        super(HistoricalPrices, self).__init__()
+        super(HistoricalWeeklyPrices, self).__init__()
         self._range_type = self.WEEKLY
 
 class HistoricalMonthlyPrices(HistoricalPrices):
     """月間の株価データを取得
     """
     def __init__(self):
-        super(HistoricalPrices, self).__init__()
+        super(HistoricalMonthlyPrices, self).__init__()
         self._range_type = self.MONTHLY
 
 class HistoricalPricesToCsv(object):
