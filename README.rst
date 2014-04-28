@@ -5,7 +5,7 @@ Overview
 
 各種データは、 `Yahoo!ファイナンス <http://finance.yahoo.co.jp/>`_ からスクレイピングしています。
 
-動作は、Python2.5 - 2.7 で確認しています。
+動作は、Python2.7.6, 3.3.5 で確認しています。
 
 Installation
 ============

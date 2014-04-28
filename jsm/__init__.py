@@ -13,7 +13,7 @@ from jsm.brand import Brand
 from jsm.search import Search
 from jsm.util import to_utf8, to_unicode
 
-VERSION = '0.6'
+VERSION = '0.7'
 
 # RangeType
 DAILY = 0
