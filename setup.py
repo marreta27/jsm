@@ -1,6 +1,6 @@
 import os
 from setuptools import setup, find_packages
-from jsm import VERSION
+VERSION = 0.8
 
 README = os.path.join(os.path.dirname(__file__),'PKG-INFO')
 long_description = open(README).read() + "\n"
