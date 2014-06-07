@@ -13,6 +13,8 @@ Installation
 PyPIからのインストールが簡単です::
 
   easy_install jsm
+  or
+  pip install jsm
 
 Usage
 =====
@@ -156,6 +158,11 @@ BrandData::
 
 Changelog
 =========
+
+0.8 (2014-06-07)
+----------------
+
+- Fixed bug
 
 0.7 (2014-04-28)
 ----------------

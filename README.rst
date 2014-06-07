@@ -13,6 +13,8 @@ Installation
 PyPIからのインストールが簡単です::
 
   easy_install jsm
+  or
+  pip install jsm
 
 Usage
 =====
