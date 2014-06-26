@@ -17,7 +17,7 @@ from jsm.pricebase import PriceData
 
 class HistoricalPricesParser(object):
     """過去の株価情報ページパーサ"""
-    SITE_URL = "http://table.yahoo.co.jp/t?c=%(syear)s&a=%(smon)s&b=%(sday)s&f=%(eyear)s&d=%(emon)s&e=%(eday)s&g=%(range_type)s&s=%(ccode)s&y=%(page)s&z=%(ccode)s.t&x=.csv"
+    SITE_URL = "http://info.finance.yahoo.co.jp/history/?code=%(ccode)s.T&sy=%(syear)s&sm=%(smon)s&sd=%(sday)s&ey=%(eyear)s&em=%(emon)s&ed=%(eday)s&tm=%(range_type)s&p=%(page)s"
     DATA_FIELD_NUM = 7 # データの要素数
     COLUMN_NUM = 50 # 1ページ辺り最大行数
 
@@ -38,10 +38,8 @@ class HistoricalPricesParser(object):
         fp = urlopen(siteurl)
         html = fp.read()
         fp.close()
-        html = html.decode("euc-jp", "ignore")
         soup = html_parser(html)
-        # <tr align=right bgcolor="#ffffff">
-        self._elms = soup.findAll("tr", attrs={"align": "right", "bgcolor": "#ffffff"})
+        self._elms = soup.findAll("table", attrs={"class": "boardFin yjSt marB6"})[0].findAll("tr")[1:]
         debuglog(siteurl)
         debuglog(len(self._elms))
         
@@ -55,7 +53,8 @@ class HistoricalPricesParser(object):
             for elm in elms:
                 tds = elm.findAll("td")
                 if len(tds) == self.DATA_FIELD_NUM:
-                    data = [self._text(td) for td in tds]
+                    #data = [self._text(td) for td in tds]
+                    data = [td.string.encode("utf-8") for td in tds]
                     data = PriceData(data[0], data[1], data[2],data[3], data[4], data[5], data[6])
                     return data
         else:
