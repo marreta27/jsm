@@ -39,7 +39,8 @@ class HistoricalPricesParser(object):
         html = fp.read()
         fp.close()
         soup = html_parser(html)
-        self._elms = soup.findAll("table", attrs={"class": "boardFin yjSt marB6"})[0].findAll("tr")[1:]
+        #self._elms = soup.findAll("table", attrs={"class": "boardFin yjSt marB6"})[0].findAll("tr")[1:]
+        self._elms = soup.findAll("table", attrs={"class": "boardFin yjSt marB6"})[0].contents[0].contents[1:]
         debuglog(siteurl)
         debuglog(len(self._elms))
         
@@ -53,8 +54,7 @@ class HistoricalPricesParser(object):
             for elm in elms:
                 tds = elm.findAll("td")
                 if len(tds) == self.DATA_FIELD_NUM:
-                    #data = [self._text(td) for td in tds]
-                    data = [td.string.encode("utf-8") for td in tds]
+                    data = [self._text(td) for td in tds]
                     data = PriceData(data[0], data[1], data[2],data[3], data[4], data[5], data[6])
                     return data
         else:
@@ -64,6 +64,11 @@ class HistoricalPricesParser(object):
         return [self.get(i) for i in range(len(self._elms))]
         
     def _text(self, soup):
+        if sys.version_info.major < 3:
+            return soup.text.encode("utf-8")
+        else:
+            return soup.text
+'''
         small = soup.find("small")
         if small:
             b = small.find("b")
@@ -79,6 +84,7 @@ class HistoricalPricesParser(object):
                     return small.text
         else:
             return ""
+'''
 
 class HistoricalPrices(object):
     """Yahooファイナンスから株価データを取得する
