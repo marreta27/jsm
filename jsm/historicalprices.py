@@ -17,14 +17,14 @@ from jsm.pricebase import PriceData
 
 class HistoricalPricesParser(object):
     """過去の株価情報ページパーサ"""
-    SITE_URL = "http://table.yahoo.co.jp/t?c=%(syear)s&a=%(smon)s&b=%(sday)s&f=%(eyear)s&d=%(emon)s&e=%(eday)s&g=%(range_type)s&s=%(ccode)s&y=%(page)s&z=%(ccode)s.t&x=.csv"
+    SITE_URL = "http://info.finance.yahoo.co.jp/history/?code=%(ccode)s.T&sy=%(syear)s&sm=%(smon)s&sd=%(sday)s&ey=%(eyear)s&em=%(emon)s&ed=%(eday)s&tm=%(range_type)s&p=%(page)s"
     DATA_FIELD_NUM = 7 # データの要素数
     COLUMN_NUM = 50 # 1ページ辺り最大行数
 
     def __init__(self):
         self._elms = []
     
-    def fetch(self, start_date, end_date, ccode, range_type, page=0):
+    def fetch(self, start_date, end_date, ccode, range_type, page=1):
         """対象日時のYahooページを開く
         start_date: 開始日時(datetime)
         end_date: 終了日時(datetime)
@@ -34,14 +34,12 @@ class HistoricalPricesParser(object):
         """
         siteurl = self.SITE_URL % {'syear': start_date.year, 'smon': start_date.month, 'sday': start_date.day,
                                    'eyear': end_date.year, 'emon': end_date.month, 'eday': end_date.day,
-                                   'page': page*self.COLUMN_NUM, 'range_type':range_type, 'ccode':ccode}
+                                   'page': page, 'range_type':range_type, 'ccode':ccode}
         fp = urlopen(siteurl)
         html = fp.read()
         fp.close()
-        html = html.decode("euc-jp", "ignore")
         soup = html_parser(html)
-        # <tr align=right bgcolor="#ffffff">
-        self._elms = soup.findAll("tr", attrs={"align": "right", "bgcolor": "#ffffff"})
+        self._elms = soup.findAll("table", attrs={"class": "boardFin yjSt marB6"})[0].findAll("tr")[1:]
         debuglog(siteurl)
         debuglog(len(self._elms))
         
@@ -65,21 +63,10 @@ class HistoricalPricesParser(object):
         return [self.get(i) for i in range(len(self._elms))]
         
     def _text(self, soup):
-        small = soup.find("small")
-        if small:
-            b = small.find("b")
-            if sys.version_info.major < 3:
-                if b:
-                    return b.text.encode("utf-8")
-                else:
-                    return small.text.encode("utf-8")
-            else:
-                if b:
-                    return b.text
-                else:
-                    return small.text
+        if sys.version_info.major < 3:
+            return soup.text.encode("utf-8")
         else:
-            return ""
+            return soup.text
 
 class HistoricalPrices(object):
     """Yahooファイナンスから株価データを取得する
@@ -92,7 +79,7 @@ class HistoricalPrices(object):
     def __init__(self):
         self._range_type = self.DAILY # 取得タイプ
 
-    def get(self, ccode, page=0):
+    def get(self, ccode, page=1):
         """指定ページから一覧を取得"""
         p = HistoricalPricesParser()
         today = datetime.date.today()
@@ -104,20 +91,20 @@ class HistoricalPrices(object):
         """最新の1件を取得"""
         p = HistoricalPricesParser()
         today = datetime.date.today()
-        p.fetch(today, today, ccode, self._range_type, 0)
+        p.fetch(today, today, ccode, self._range_type, 1)
         return p.get()
     
     def get_one(self, ccode, date):
         """指定日時の中から1件を取得"""
         p = HistoricalPricesParser()
-        p.fetch(date, date, ccode, self._range_type, 0)
+        p.fetch(date, date, ccode, self._range_type, 1)
         return p.get()
     
     def get_range(self, ccode, start_date, end_date):
         """指定日時間から取得"""
         p = HistoricalPricesParser()
         res = []
-        for page in range(500):
+        for page in range(1,500):
             p = HistoricalPricesParser()
             p.fetch(start_date, end_date, ccode, self._range_type, page)
             data = p.get_all()
@@ -132,7 +119,7 @@ class HistoricalPrices(object):
         start_date = datetime.date(2000, 1, 1)
         end_date = datetime.date.today()
         res = []
-        for page in range(500):
+        for page in range(1,500):
             p = HistoricalPricesParser()
             p.fetch(start_date, end_date, ccode, self._range_type, page)
             data = p.get_all()
