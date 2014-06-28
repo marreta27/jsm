@@ -159,6 +159,11 @@ BrandData::
 Changelog
 =========
 
+0.9 (2014-06-28)
+----------------
+
+- Fixed #9 historicalprices error
+
 0.8 (2014-06-07)
 ----------------
 
