@@ -43,25 +43,31 @@ class HistoricalPricesParser(object):
         debuglog(siteurl)
         debuglog(len(self._elms))
         
-    def get(self, idx=None):
+    def get(self, idx=0):
         if self._elms:
-            # 有効なデータが見つかるまでループ
+            # 有効なデータを1件取得
             if idx >= 0:
-                elms = self._elms[idx:]
+                elm = self._elms[idx]
             else:
-                elms = self._elms
-            for elm in elms:
-                tds = elm.findAll("td")
-                if len(tds) == self.DATA_FIELD_NUM:
-                    data = [self._text(td) for td in tds]
-                    data = PriceData(data[0], data[1], data[2],data[3], data[4], data[5], data[6])
-                    return data
+                return None
+            tds = elm.findAll("td")
+            if len(tds) == self.DATA_FIELD_NUM:
+                data = [self._text(td) for td in tds]
+                data = PriceData(data[0], data[1], data[2], data[3], data[4], data[5], data[6])
+                return data
+            else:
+                return None
         else:
             return None
     
     def get_all(self):
-        return [self.get(i) for i in range(len(self._elms))]
-        
+        res = []
+        for i in range(len(self._elms)):
+            data = self.get(i)
+            if data:
+                res.append(data)
+            return res
+
     def _text(self, soup):
         if sys.version_info.major < 3:
             return soup.text.encode("utf-8")
@@ -82,16 +88,17 @@ class HistoricalPrices(object):
     def get(self, ccode, page=1):
         """指定ページから一覧を取得"""
         p = HistoricalPricesParser()
-        today = datetime.date.today()
-        old = datetime.date(2000, 1, 1)
-        p.fetch(old, today, ccode, self._range_type, page)
+        end_date = datetime.date.today()
+        start_date = datetime.date(2000, 1, 1)
+        p.fetch(start_date, end_date, ccode, self._range_type, page)
         return p.get_all()
     
     def get_latest_one(self, ccode):
         """最新の1件を取得"""
         p = HistoricalPricesParser()
-        today = datetime.date.today()
-        p.fetch(today, today, ccode, self._range_type, 1)
+        end_date = datetime.date.today()
+        start_date = end_date - datetime.timedelta(7) # とりあえず1週間ぶん取得
+        p.fetch(start_date, end_date, ccode, self._range_type, 1)
         return p.get()
     
     def get_one(self, ccode, date):
