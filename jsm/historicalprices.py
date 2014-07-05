@@ -66,7 +66,7 @@ class HistoricalPricesParser(object):
             data = self.get(i)
             if data:
                 res.append(data)
-            return res
+        return res
 
     def _text(self, soup):
         if sys.version_info.major < 3:
