@@ -53,9 +53,15 @@ class PriceData(object):
         if type(val) == int:
             return val
         if type(val) == str:
-            return int(val.replace(',', ''))
-        return int(val.decode("utf8").replace(',', ''))
-    
+            return self._numeric(val.replace(',', ''))
+        return self._numeric(val.decode("utf8").replace(',', ''))
+
+    def _numeric(self, val):
+        try:
+            return int(val)
+        except ValueError:
+            return round(float(val), 1)
+
     def __repr__(self):
         """デバッグ文字列
         """

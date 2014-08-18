@@ -1,6 +1,6 @@
 import os
 from setuptools import setup, find_packages
-VERSION = "0.10"
+VERSION = "0.11"
 
 README = os.path.join(os.path.dirname(__file__),'PKG-INFO')
 long_description = open(README).read() + "\n"
