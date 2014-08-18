@@ -159,6 +159,11 @@ BrandData::
 Changelog
 =========
 
+0.11 (2014-08-18)
+-----------------
+
+- Fixed invalid literal for int() with base 10
+
 0.10 (2014-06-28)
 -----------------
 
