@@ -17,7 +17,7 @@ from jsm.pricebase import PriceData
 
 class HistoricalPricesParser(object):
     """過去の株価情報ページパーサ"""
-    SITE_URL = "http://info.finance.yahoo.co.jp/history/?code=%(ccode)s.T&sy=%(syear)s&sm=%(smon)s&sd=%(sday)s&ey=%(eyear)s&em=%(emon)s&ed=%(eday)s&tm=%(range_type)s&p=%(page)s"
+    SITE_URL = "http://info.finance.yahoo.co.jp/history/?code=%(ccode)s&sy=%(syear)s&sm=%(smon)s&sd=%(sday)s&ey=%(eyear)s&em=%(emon)s&ed=%(eday)s&tm=%(range_type)s&p=%(page)s"
     DATA_FIELD_NUM = 7 # データの要素数
     COLUMN_NUM = 50 # 1ページ辺り最大行数
 
