@@ -159,6 +159,11 @@ BrandData::
 Changelog
 =========
 
+0.12 (2014-08-31)
+-----------------
+
+- Fixed #14 get_historical_prices error
+
 0.11 (2014-08-18)
 -----------------
 
