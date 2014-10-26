@@ -14,6 +14,8 @@ import csv
 import sys
 from jsm.util import html_parser, debuglog
 from jsm.pricebase import PriceData
+import jsm
+
 
 class HistoricalPricesParser(object):
     """過去の株価情報ページパーサ"""
@@ -39,7 +41,10 @@ class HistoricalPricesParser(object):
         html = fp.read()
         fp.close()
         soup = html_parser(html)
-        self._elms = soup.findAll("table", attrs={"class": "boardFin yjSt marB6"})[0].findAll("tr")[1:]
+        self._elms = soup.findAll("table", attrs={"class": "boardFin yjSt marB6"})
+        if len(self._elms) == 0:
+            raise jsm.CCODENotFoundException
+        self._elms = self._elms[0].findAll("tr")[1:]
         debuglog(siteurl)
         debuglog(len(self._elms))
         

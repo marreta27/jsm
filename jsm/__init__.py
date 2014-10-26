@@ -13,6 +13,9 @@ from jsm.brand import Brand
 from jsm.search import Search
 from jsm.util import to_utf8, to_unicode
 
+# Exceptions
+class CCODENotFoundException(Exception):pass
+
 # RangeType
 DAILY = 0
 WEEKLY = 1
