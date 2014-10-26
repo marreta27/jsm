@@ -6,6 +6,15 @@ from tests import CCODE
 import jsm
 import datetime
 import time
+from jsm.exceptions import CCODENotFoundException
+
+def test_ccode_exception():
+    q = jsm.Quotes()
+    try:
+        q.get_historical_prices('0000', jsm.DAILY)
+    except CCODENotFoundException:
+        return
+    raise Exception('exception is not thrown')
 
 def test_get_daily():
     q = jsm.Quotes()

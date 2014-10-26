@@ -14,7 +14,7 @@ import csv
 import sys
 from jsm.util import html_parser, debuglog
 from jsm.pricebase import PriceData
-import jsm
+from jsm.exceptions import CCODENotFoundException
 
 
 class HistoricalPricesParser(object):
@@ -43,7 +43,7 @@ class HistoricalPricesParser(object):
         soup = html_parser(html)
         self._elms = soup.findAll("table", attrs={"class": "boardFin yjSt marB6"})
         if len(self._elms) == 0:
-            raise jsm.CCODENotFoundException
+            raise CCODENotFoundException("証券コードが見つかりません")
         self._elms = self._elms[0].findAll("tr")[1:]
         debuglog(siteurl)
         debuglog(len(self._elms))
