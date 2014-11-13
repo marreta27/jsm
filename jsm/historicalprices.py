@@ -21,6 +21,7 @@ class HistoricalPricesParser(object):
     """過去の株価情報ページパーサ"""
     SITE_URL = "http://info.finance.yahoo.co.jp/history/?code=%(ccode)s&sy=%(syear)s&sm=%(smon)s&sd=%(sday)s&ey=%(eyear)s&em=%(emon)s&ed=%(eday)s&tm=%(range_type)s&p=%(page)s"
     DATA_FIELD_NUM = 7 # データの要素数
+    INDEX_DATA_FIELD_NUM = 5 # 指数系データの要素数
     COLUMN_NUM = 50 # 1ページ辺り最大行数
 
     def __init__(self):
@@ -59,6 +60,10 @@ class HistoricalPricesParser(object):
             if len(tds) == self.DATA_FIELD_NUM:
                 data = [self._text(td) for td in tds]
                 data = PriceData(data[0], data[1], data[2], data[3], data[4], data[5], data[6])
+                return data
+            elif len(tds) == self.INDEX_DATA_FIELD_NUM:
+                data = [self._text(td) for td in tds]
+                data = PriceData(data[0], data[1], data[2], data[3], data[4], 0, data[4])
                 return data
             else:
                 return None
