@@ -159,6 +159,11 @@ BrandData::
 Changelog
 =========
 
+0.14 (2014-11-13)
+-----------------
+
+- Fixed failed to fetch topix data
+
 0.13 (2014-10-26)
 -----------------
 
