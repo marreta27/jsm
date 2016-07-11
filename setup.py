@@ -1,6 +1,6 @@
 import os
 from setuptools import setup, find_packages
-from jsm import VERSION
+VERSION = "0.14"
 
 README = os.path.join(os.path.dirname(__file__),'PKG-INFO')
 long_description = open(README).read() + "\n"
@@ -10,7 +10,7 @@ setup(name='jsm',
       description="Get the japanese stock market data",
       long_description=long_description,
       install_requires=[
-        'BeautifulSoup',
+        'beautifulsoup4',
         'html5lib',
       ],
       classifiers=[

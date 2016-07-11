@@ -5,7 +5,7 @@ Overview
 
 各種データは、 `Yahoo!ファイナンス <http://finance.yahoo.co.jp/>`_ からスクレイピングしています。
 
-動作は、Python2.5 - 2.7 で確認しています。
+動作は、Python2.7.6, 3.3.5 で確認しています。
 
 Installation
 ============
@@ -13,6 +13,8 @@ Installation
 PyPIからのインストールが簡単です::
 
   easy_install jsm
+  or
+  pip install jsm
 
 Usage
 =====
@@ -156,6 +158,53 @@ BrandData::
 
 Changelog
 =========
+
+0.14 (2014-11-13)
+-----------------
+
+- Fixed failed to fetch topix data
+
+0.13 (2014-10-26)
+-----------------
+
+- Improved exception
+
+0.12 (2014-08-31)
+-----------------
+
+- Fixed #14 get_historical_prices error
+
+0.11 (2014-08-18)
+-----------------
+
+- Fixed invalid literal for int() with base 10
+
+0.10 (2014-06-28)
+-----------------
+
+- Fixed #10 duplicated data
+- Fixed #11 get_latest_one return None
+
+0.9 (2014-06-28)
+----------------
+
+- Fixed #9 historicalprices error
+
+0.8 (2014-06-07)
+----------------
+
+- Fixed bug
+
+0.7 (2014-04-28)
+----------------
+
+- Python3 support
+- Fixed bug
+
+0.6 (2013-02-03)
+----------------
+
+- Fixed bug
 
 0.5 (2011-09-08)
 ----------------

@@ -2,7 +2,7 @@
 #---------------------------------------------------------------------------
 # Copyright 2011 utahta
 #---------------------------------------------------------------------------
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from html5lib import HTMLParser
 from html5lib import treebuilders
 import logging
@@ -22,11 +22,17 @@ def debuglog(val):
     logging.debug(val)
     
 def to_utf8(val):
-    if type(val) is unicode:
+    if type(val) is bytes:
         return val.encode("utf-8")
-    return val
+    try:
+        if type(val) is unicode:
+            return val.encode("utf-8")
+    finally:
+        return val
 
 def to_unicode(val):
-    if type(val) is str:
-        return val.decode('utf-8')
-    return val
+    try:
+        if type(val) is str:
+            return val.decode('utf-8')
+    finally:
+        return val

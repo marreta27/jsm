@@ -2,7 +2,12 @@
 #---------------------------------------------------------------------------
 # Copyright 2011 utahta
 #---------------------------------------------------------------------------
-import urllib2
+try:
+    # For Python3
+    from urllib.request import urlopen
+except ImportError:
+    # For Python2
+    from urllib2 import urlopen
 import re
 from jsm.util import html_parser, debuglog
 
@@ -71,13 +76,13 @@ class FinanceParser(object):
         """財務データを取得
         ccode: 証券コード
         """
-        siteurl = self.SITE_URL % {'ccode':ccode}
-        fp = urllib2.urlopen(siteurl)
+        siteurl = self.SITE_URL % {'ccode': ccode}
+        fp = urlopen(siteurl)
         html = fp.read()
         fp.close()
-        html = html.decode("euc_jp", "ignore").encode("utf8") # UTF-8に変換
+        html = html.decode("utf-8", "ignore")
         soup = html_parser(html)
-        self._elm = soup.find("div", attrs={"class": "chartFinance"})
+        self._elm = soup.find(lambda tag: tag.name == "div" and tag.get("class") == ["chartFinance"])
         debuglog(siteurl)
 
     def get(self):
@@ -98,7 +103,7 @@ class FinanceParser(object):
         if dd:
             strong = dd.find("strong")
             if strong:
-                return strong.text.encode("utf-8")
+                return strong.text
         return ""
 
 class Finance(object):

@@ -14,3 +14,6 @@ parts
 *.swp
 *egg-info
 build
+.python-version
+*.iml
+.idea

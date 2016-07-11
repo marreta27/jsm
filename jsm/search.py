@@ -2,7 +2,13 @@
 #---------------------------------------------------------------------------
 # Copyright 2011 utahta
 #---------------------------------------------------------------------------
-import urllib2
+try:
+    # For Python3
+    from urllib.request import urlopen
+    from urllib.parse import quote_plus
+except ImportError:
+    # For Python2
+    from urllib2 import urlopen
 import math
 import time
 from jsm.util import html_parser
@@ -25,13 +31,14 @@ class SearchParser(object):
         terms: 検索ワード
         page: ページ
         """
+        terms = quote_plus(terms)
         siteurl = self.SITE_URL % {'terms':terms, 'page':page}
-        fp = urllib2.urlopen(siteurl)
+        fp = urlopen(siteurl)
         html = fp.read()
         fp.close()
         soup = html_parser(html)
-        
-        elm = soup.find('div', {'class': 'ymuiPagingTop yjSt marB4 clearFix'})
+
+        elm = soup.find('div', {'class': 'ymuiPagingTop yjSt clearFix'})
         if elm:
             # 全件数
             max_page = self._text(elm)
@@ -54,7 +61,7 @@ class SearchParser(object):
         elms = []
         self.fetch(terms, page)
         elms.extend(self._elms)
-        for page in xrange(2, self._max_page+1):
+        for page in range(2, self._max_page+1):
             self.fetch(terms, page)
             elms.extend(self._elms)
             time.sleep(0.5)
@@ -105,7 +112,8 @@ class Search(object):
     """銘柄検索
     """
     def get(self, terms):
-        p = SearchParser()
-        p.fetch_all(terms)
-        return p.get()
-        
+        # まともに動いていないみたいなので一旦無効化
+        return []
+        #p = SearchParser()
+        #p.fetch_all(terms)
+        #return p.get()
